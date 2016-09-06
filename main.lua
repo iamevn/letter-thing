@@ -9,6 +9,10 @@ local res = {}
 s = "Hello world!"
 spos = { x = 250, y = 300 }
 center = { x = 300, y = 400 }
+mouseinfo = {
+    pressed = false,
+    dragged = { x = 0, y = 0 }
+}
 
 -- run once at init time
 function love.load()
@@ -41,9 +45,15 @@ function love.draw()
         bar = -1
     end
 
-    for change = 10, 1, -1 do
-        love.graphics.setColor(255 - change * 20, 255 - change * 20, 255 - change * 20, 255)
-        love.graphics.printf(s, x + change * foo, y + change * bar, 600 - x, "left")
+    for step = 10, 1, -1 do
+        love.graphics.setColor(255 - step * 20, 255 - step * 20, 255 - step * 20, 255)
+        love.graphics.printf(
+            s,
+            x + step * mouseinfo.dragged.x,
+            y + step * mouseinfo.dragged.y,
+            600 - x,
+            "left"
+        )
     end
 
     love.graphics.setColor(255, 255, 255, 255)
@@ -67,5 +77,24 @@ function love.keypressed(key)
         spos.x = spos.x - 5
     elseif key == "right" then
         spos.x = spos.x + 5
+    end
+end
+
+function love.mousepressed(x, y, button)
+    mouseinfo.pressed = true
+    mouseinfo.dragged = { x = 0, y = 0 }
+end
+
+function love.mousereleased(x, y, button)
+    mouseinfo.pressed = false
+end
+
+function love.mousemoved(x, y, dx, dy)
+    local mi = mouseinfo
+    if mi.pressed then
+        mi.dragged = {
+            x = mi.dragged.x + dx,
+            y = mi.dragged.y + dy
+        }
     end
 end
