@@ -1,5 +1,4 @@
 --[[ main.lua
-
      To have dispatch start up love for you:
      :set makeprg=love\ .
      :autocmd BufWritePost *.lua Make!
@@ -10,12 +9,21 @@ s = "Hello world!"
 spos = { x = 250, y = 300 }
 mouseinfo = {
     pressed = false,
-    dragged = { x = 0, y = 0 }
+    dragged = { x = 0, y = 0 },
+    mag = 0
 }
 
+fonts = {
+    "mentone-semibold.otf",
+    "Armyd.TTF",
+    "3Dumb.ttf",
+    "23.ttf",
+    "BradBunR.ttf",
+    "Bubblegum.ttf",
+}
 -- run once at init time
 function love.load()
-    res.font = love.graphics.newFont("mentone-semibold.otf", 100)
+    res.font = love.graphics.newFont(fonts[#fonts], 100)
     love.graphics.setFont(res.font)
     love.graphics.setColor(255, 255, 255, 255)
 end
@@ -26,10 +34,11 @@ end
 
 -- run after love.update() each frame
 function love.draw()
+    love.graphics.clear(65, 173, 246, 255)
 
     local x, y = spos.x, spos.y
     love.graphics.setColor(248, 138, 65, 255)
-    for step = 0.5, 0.01, -0.01 do
+    for step = 0.5, 0.01, -1 / mouseinfo.mag do
         -- love.graphics.setColor(255 - step * 20, 255 - step * 20, 255 - step * 20, 255)
         love.graphics.printf(
             s,
@@ -79,5 +88,6 @@ function love.mousemoved(x, y, dx, dy)
             x = mi.dragged.x + dx,
             y = mi.dragged.y + dy
         }
+        mi.mag = math.sqrt(mi.dragged.x * mi.dragged.x + mi.dragged.y * mi.dragged.y)
     end
 end
