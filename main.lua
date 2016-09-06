@@ -15,7 +15,7 @@ mouseinfo = {
 
 -- run once at init time
 function love.load()
-    res.font = love.graphics.newFont("mentone-semibold.otf", 60)
+    res.font = love.graphics.newFont("mentone-semibold.otf", 100)
     love.graphics.setFont(res.font)
     love.graphics.setColor(255, 255, 255, 255)
 end
@@ -26,11 +26,11 @@ end
 
 -- run after love.update() each frame
 function love.draw()
-    love.graphics.setColor(255, 0, 0, 255)
 
     local x, y = spos.x, spos.y
+    love.graphics.setColor(248, 138, 65, 255)
     for step = 0.5, 0.01, -0.01 do
-        love.graphics.setColor(255 - step * 20, 255 - step * 20, 255 - step * 20, 255)
+        -- love.graphics.setColor(255 - step * 20, 255 - step * 20, 255 - step * 20, 255)
         love.graphics.printf(
             s,
             x + step * mouseinfo.dragged.x,
