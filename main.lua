@@ -56,8 +56,10 @@ end
 -- https://love2d.org/wiki/KeyConstant
 function love.keypressed(key)
     -- printables and space
-    if key:len() == 1 or key == "space" then
+    if key:len() == 1 then
         s = s .. key
+    elseif key == "space" then
+        s = s .. " "
     elseif key == "backspace" then
         s = s:sub(1, -2)
     elseif key == "return" then
