@@ -3,6 +3,7 @@
      :set makeprg=love\ .
      :autocmd BufWritePost *.lua Make!
   ]]
+local utf8 = require("utf8")
 
 local res = {}
 local s = "Hello world!"
@@ -70,15 +71,13 @@ end
 
 -- https://love2d.org/wiki/KeyConstant
 function love.keypressed(key)
-    -- printables and space
-    if key:len() == 1 then
-        s = s .. key
-    elseif key == "space" then
-        s = s .. " "
-    elseif key == "backspace" then
-        s = s:sub(1, -2)
-    elseif key == "return" then
-        s = s .. "\n"
+    if key == "backspace" then
+        -- deal with UTF8 characters instead of bytes
+        local byteoffset = utf8.offset(s, -1)
+
+        if byteoffset then
+            s = s:sub(1, byteoffset - 1)
+        end
     elseif key == "up" then
         spos.y = spos.y - 5
     elseif key == "down" then
@@ -88,6 +87,10 @@ function love.keypressed(key)
     elseif key == "right" then
         spos.x = spos.x + 5
     end
+end
+
+function love.textinput(text)
+    s = s .. text
 end
 
 function love.mousepressed(x, y, button)
