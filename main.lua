@@ -5,25 +5,40 @@
   ]]
 
 local res = {}
-s = "Hello world!"
-spos = { x = 250, y = 300 }
-mouseinfo = {
+local s = "Hello world!"
+local spos = { x = 250, y = 300 }
+local mouseinfo = {
     pressed = false,
     dragged = { x = 0, y = 0 },
     mag = 0
 }
+local fonts = {}
 
-fonts = {
-    "mentone-semibold.otf",
-    "Armyd.TTF",
-    "3Dumb.ttf",
-    "23.ttf",
-    "BradBunR.ttf",
-    "Bubblegum.ttf",
-}
 -- run once at init time
 function love.load()
-    res.font = love.graphics.newFont(fonts[#fonts], 100)
+    math.randomseed(os.time())
+    -- try to create ./fonts/ if we need to, error out if it doesn't exist and we can't create it
+    if not love.filesystem.isDirectory("fonts") then
+        print("couldn't find fonts/\n creating ./fonts/")
+        if not love.filesystem.createDirectory("fonts") then
+            print("ERROR: couldn't create ./fonts/")
+            love.event.quit()
+        end
+    end
+    -- load random font from ./fonts/ if it exists. if it is empty load default font
+    local fontfiles = love.filesystem.getDirectoryItems("fonts")
+    for i,font in pairs(fontfiles) do
+        print("loading "..font)
+        fonts[i] = font
+    end
+    if #fonts > 0 then
+        local n = math.random(#fonts)
+        print("using ./fonts/"..fonts[n])
+        res.font = love.graphics.newFont("fonts/"..fonts[n], 100)
+    else
+        print("./fonts/ empty, using default (Vera Sans)")
+        res.font = love.graphics.newFont(100)
+    end
     love.graphics.setFont(res.font)
     love.graphics.setColor(255, 255, 255, 255)
 end
